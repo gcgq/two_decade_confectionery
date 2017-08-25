@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
   {# {{ block super }}#}
+  {% for product in object_list %}
+  <div class="">
+    {{product.name}}
+    {{product.description}}
+    <img src="{{product.productimage_set.first.image.url}}" alt="">
+  </div>
+  {% endfor %}
   <p>
     product list
   </p>

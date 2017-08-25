@@ -2,13 +2,24 @@ from django.db import models
 from django.db.models.signals import pre_save, post_save
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
+
+from django.conf import settings
 # from django.core.validators import MinValueValidator
 # validators=[MinValueValidator(1)]
 # Create your models here.
 
 class Product(models.Model):
+    TRUFFLE = 'Truffle'
+    COOKIE = 'Cookie'
+    CUPCAKE = 'Cupcake'
+    CATEGORY_CHOICES = (
+        (TRUFFLE, 'Truffle'),
+        (COOKIE, 'Cookie'),
+        (CUPCAKE, 'Cupcake')
+    )
+
     name = models.CharField(max_length=150)
-    category = models.CharField(max_length=50)
+    category = models.CharField(max_length=10,choices=CATEGORY_CHOICES, default=TRUFFLE)
     description = models.CharField(max_length=1000)
     price = models.DecimalField(max_digits=7, decimal_places=2, default=2.99)
     sale_price = models.DecimalField(max_digits=7, decimal_places=2,
@@ -88,3 +99,15 @@ def on_variation_save(sender, instance, *args, **kwargs):
         print("One Dozen {} created".format( half_dozen.product.name ))
 
 post_save.connect(on_variation_save, sender=Product)
+
+def image_upload_to(instance, filename):
+    basename, file_extension = filename.split(".")
+    new_filename = "{}.{}".format(instance.product.id, file_extension)
+    return settings.STATIC_URL + "/products/{}".format(new_filename)
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product)
+    image = models.ImageField(upload_to=image_upload_to)
+
+    def __str__(self):
+        return self.product.name

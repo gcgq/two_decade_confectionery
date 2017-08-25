@@ -13,8 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
 from django.conf import settings
+from django.conf.urls import url
+from django.conf.urls.static import static
 
 from django.contrib import admin
 
@@ -25,13 +26,12 @@ urlpatterns = [
     url(r'^products/$', views.ProductListView.as_view(), name ="products_list_view"),
     url(r'^products/(?P<pk>\d+)$', views.ProductDetailView.as_view(), name ="products_detail_view"),
     url(r'^products/(?P<slug>[\w-]+)$', views.ProductDetailView.as_view(), name ="products_slug_view"),
-
     url(r'^products/create/$', views.ProductCreateView.as_view(), name ="products_create_view"),
     url(r'^products/update/(?P<pk>\d+)$', views.ProductUpdateView.as_view(), name ="products_update_view"),
     url(r'^products/delete/(?P<pk>\d+)$', views.ProductDeleteView.as_view(), name ="products_delete_view"),
 
 ]
 
-# if settings.DEBUG:
-#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

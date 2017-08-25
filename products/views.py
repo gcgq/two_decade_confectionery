@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic.edit import DeleteView
 
 from .models import Product
+from two_decade_confections.mixins import SlugMixin
 # Create your views here.
 
 class ProductListView(ListView):
@@ -15,7 +16,7 @@ class ProductListView(ListView):
     def get_queryset(self, *args, **kwargs):
         queryset = super(ProductListView, self).get_queryset(**kwargs)
         return queryset
-class ProductDetailView(DetailView):
+class ProductDetailView(SlugMixin, DetailView):
     model = Product
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)

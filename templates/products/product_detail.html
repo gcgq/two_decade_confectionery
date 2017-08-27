@@ -1,4 +1,31 @@
 {% extends "base.html" %}
+
+<script type="text/javascript">
+  {% block jquery %}
+    // alert("hi")
+    $("#jq-msg").hide()
+    $("#submit-btn").click(function(event){
+      event.preventDefault();
+      var formData = $("#add-form").serialize();
+      console.log(formData);
+      //ajax call for add_to_art
+      $.ajax({
+        type:"GET",
+        url: {% url 'cart' %},
+        data: formData,
+        success: function(data){
+          $("#jq-msg").text("Added: " + data.created + " deleted: " + data.deleted).show();
+          console.log(data);
+        },
+        error: function(response, error){
+          console.log(response);
+          console.log(error);
+          $("#add-form").submit();
+        }
+      });
+    });
+  {% endblock jquery %}
+</script>
 {% block content %}
   <h3>product detail {{object.name}}</h3>
 

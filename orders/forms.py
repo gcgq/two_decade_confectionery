@@ -1,4 +1,4 @@
-from django import form
+from django import forms
 
 from django.contrib.auth import get_user_model
 from .models import UserAddress
@@ -31,7 +31,7 @@ class AddressForm(forms.Form):
 
     shipping_address = forms.ModelChoiceField(
         queryset = UserAddress.objects.filter(address_type="shipping"),
-        empty=  None,
+        empty_label = None,
         required = False
     )
 

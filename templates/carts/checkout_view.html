@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load crispy_form_tags %}
+
+{% block content%}
+  {{ client_token }}
+
+  {% if not user_can_continue %}
+  <div class="">
+    <p>Continue as guest</p>
+    <form class="" action="" method="post">
+      {% csrf_token %}
+      {{ form | crispy }}
+      <input type="submit" name="btn btn-success" value="Continue As Guest">
+    </form>
+  </div>
+  <div class="">
+    <p class="lead">Login to Continue</p>
+    <form class="" action="index.html" method="post">
+      {{ login_form | crispy }}
+      <input type="hidden" name="next" value="{{next_url}}">
+      <input type="submit" name="btn btn-success" value="Login">
+    </form>
+    <p class="text-center">
+      <p>{% trans "Forgot Password" %}?
+        <a href="{% url 'account_reset_password'%}">{% trans "Reset"%}!</a></p>
+      <p>{% trans "Not a member"%}?
+        <a href="{% url 'account_signup'%}">{% trans "Register"%}!</a></p>
+    </p>
+  </div>
+  {% else %}
+  <div class="">
+    <p class="lead">Order Summary</p>
+    <table class="table">
+      <tr>
+        <td>
+          {{ order.cart.cartitem_set.count }} Item(s):<br>
+          {% for i in order.cart.cartitem_set.all %}
+            <b>{{ i.item.get_title }}</b>
+          {% endfor %}
+        </td>
+      </tr>
+      <tr>
+        <td>Cart Subtotal: {{order.cart.subtotal}}</td>
+      </tr>
+      <tr>
+        <td>Tax: {{order.cart.tax_total}}</td>
+      </tr>
+      <tr>
+        <td>Items Total: {{order.cart.total}}</td>
+      </tr>
+      <tr>
+        <td>Shipping: {{order.shipping_total_price}}</td>
+      </tr>
+      <tr>
+        <td>Order total: {{order.order_total}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="col-sm-4 col-sm-offset-4 text-center">
+
+    <p>
+      <b>Billing To:</b><br>{{order.billing_address.get_address}}
+    </p>
+    <p>
+      <b>Shipping To:</b><br>{{ order.shipping_address.get_address }}
+    </p>
+    <br>
+    <form id="checkout" class="" action="{% url 'checkout_final' %}" method="POST">
+      {%csrf_token%}
+      <div id="payment-form">
+
+      </div>
+      <p>
+        <button type="submit"><b>Complete Order</b></button>
+      </p>
+    </form>
+  </div>
+  {% endif %}
+{% endblock content%}
+
+{# <!-- <input type = "hidden" name = "payment_token" value = "ABC"> -->#}
+{# <!-- {% include "orders/order_summary_short.html" with order=order %} -->#}

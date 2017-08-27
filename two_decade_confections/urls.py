@@ -51,7 +51,7 @@ urlpatterns = [
     url(r'^checkout/address/add$',
         UserAddressCreateView.as_view(), name = "user_address_create"),
     url(r'^checkout/final/$',
-        CheckoutFinalView.as_view(), name = "checkout_final")
+        CheckoutFinalView.as_view(), name = "checkout_final"),
 ]
 
 if settings.DEBUG:

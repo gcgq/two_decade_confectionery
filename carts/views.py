@@ -14,7 +14,23 @@ from products.models import Variation
 from orders.models import UserCheckout, Order, UserAddress
 from orders.forms import GuestCheckoutForm
 from orders.mixins import CartOrderMixin
+
+import braintree
+
+braintree.Configuration.configure(
+    braintree.Environment.Sandbox,
+    'PRIVATE_ID',
+    'PUBLIC_KEY',
+    'MERCHANT_ID'
+)
+
+if settings.DEBUG:
+    braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                      merchant_id = settings.BRAINTREE_MERCHANT_ID,
+                                      public_key = settings.BRAINTREE_PUBLIC,
+                                      private_key = settings.BRAINTREE_PRIVATE)
 # Create your views here.
+
 
 class CartView(SingleObjectMixin, View):
     model = CartItem
@@ -92,7 +108,7 @@ class CartView(SingleObjectMixin, View):
         template = self.template_name
         return render(request, template, context)
 
-class CheckoutView(CartOrderMixin, FormMixin, Detailview):
+class CheckoutView(CartOrderMixin, FormMixin, DetailView):
     model = Cart
     template_name = "carts/checkout_view.html"
     form_class = GuestCheckoutForm

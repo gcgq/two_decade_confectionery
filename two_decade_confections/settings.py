@@ -37,10 +37,11 @@ ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-LOGIN_REDIRECT_URL = "products"
+LOGIN_REDIRECT_URL = "products_list_view"
 
-SITE_ID = 1
-SITES = ["http://localhost:8000", "http://127.0.0.1:8000"]
+SITE_ID = 3
+# SITES = ["http://localhost:8000", "http://127.0.0.1:8000"]
+
 CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 # Application definition
@@ -129,6 +130,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -148,6 +154,9 @@ STATICFILES_DIRS = [
     ]
 
 MEDIA_URL = '/media/'
+
+SOCIAL_AUTH_FACEBOOK_KEY = '1772556799703249'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET ='2b21afa826e597ee7839211c4b5a46a7' #app key
 
 SOCIALACCOUNT_PROVIDERS = \
     {'facebook':
@@ -170,3 +179,9 @@ SOCIALACCOUNT_PROVIDERS = \
         'LOCALE_FUNC':  lambda request: 'en_US',
         'VERIFIED_EMAIL': True,
         'VERSION': 'v2.4'}}
+
+# braintree setup
+BRAINTREE_PUBLIC='97dyg9x8tzy4wbjz',
+BRAINTREE_PRIVATE='cd2fc487ce69b3cffede1ed7b8d34c2c'
+BRAINTREE_MERCHANT_ID='f3yp35zj726j2xz4'
+ENVIRONMENT='SANDBOX'

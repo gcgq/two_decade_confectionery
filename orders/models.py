@@ -6,12 +6,24 @@ from django.conf import settings
 from django.views.generic.list import ListView
 
 from carts.models import Cart
-# import braintree
-# Create your models here.
+import braintree
+
+braintree.Configuration.configure(
+    braintree.Environment.Sandbox,
+    'PRIVATE_ID',
+    'PUBLIC_KEY',
+    'MERCHANT_ID')
+
+if settings.DEBUG:
+    braintree.Configuration.configure(
+        braintree.Environment.Sandbox,
+        merchant_id = settings.BRAINTREE_MERCHANT_ID,
+        public_key = settings.BRAINTREE_PUBLIC,
+        private_key = settings.BRAINTREE_PRIVATE)
 
 class UserCheckout(models.Model):
     user = models.OneToOneField(
-        setting.AUTH_USER_MODEL, null = True, blank = True)
+        settings.AUTH_USER_MODEL, null = True, blank = True)
     email = models.EmailField(unique = True)
     braintree_id = models.CharField(max_length = 120, null = True, blank = True)
 
@@ -39,19 +51,19 @@ class UserCheckout(models.Model):
         return None
 
 def update_braintree_id(sender, instance, *args, **kwargs):
-    if not instance.braintree_id
+    if not instance.braintree_id:
         instance.get_braintree_id
 
 post_save.connect(update_braintree_id, sender = UserCheckout)
 
 ADDRESS_TYPE = (
-    ('billing','Billing')
+    ('billing','Billing'),
     ('shipping','Shipping')
 )
 
 class UserAddress(models.Model):
     user = models.ForeignKey(UserCheckout)
-    address_type = models.CharField(choice = ADDRESS_TYPE, max_length = 10)
+    address_type = models.CharField(choices = ADDRESS_TYPE, max_length = 10)
     street = models.CharField(max_length = 50)
     city = models.CharField(max_length = 50)
     state = models.CharField(max_length = 2)
@@ -64,11 +76,11 @@ class UserAddress(models.Model):
         return "{}, {}, {}, {}".format(self.street, self.city, self.state, self.zipcode)
 
 ORDER_STATUS_CHOICES = (
-    ('created', 'Created')
+    ('created', 'Created'),
     ('paid', 'Paid')
 )
 
-class Order(model.Models):
+class Order(models.Model):
     status = models.CharField(max_length = 10,
         choices = ORDER_STATUS_CHOICES, default = "created")
     cart = models.ForeignKey(Cart)

@@ -14,24 +14,46 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.conf.urls.static import static
 
 from django.contrib import admin
 
-from products import views
+from products.views import ProductListView, ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView
+from carts.views import CartView, CheckoutView, CheckoutFinalView
+from orders.views import AddressSelectFormView, UserAddressCreateView, OrderList, OrderDetail
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^products/$', views.ProductListView.as_view(), name ="products_list_view"),
-    url(r'^products/(?P<pk>\d+)$', views.ProductDetailView.as_view(), name ="products_detail_view"),
-    url(r'^products/(?P<slug>[\w-]+)$', views.ProductDetailView.as_view(), name ="products_slug_view"),
-    url(r'^products/create/$', views.ProductCreateView.as_view(), name ="products_create_view"),
-    url(r'^products/update/(?P<pk>\d+)$', views.ProductUpdateView.as_view(), name ="products_update_view"),
-    url(r'^products/delete/(?P<pk>\d+)$', views.ProductDeleteView.as_view(), name ="products_delete_view"),
+    url(r'^accounts/', include('allauth.urls')),
 
+    url(r'^products/$',
+        ProductListView.as_view(), name = "products_list_view"),
+    url(r'^products/(?P<pk>\d+)$',
+        ProductDetailView.as_view(), name = "products_detail_view"),
+    url(r'^products/(?P<slug>[\w-]+)$',
+        ProductDetailView.as_view(), name = "products_slug_view"),
+    url(r'^products/create/$',
+        ProductCreateView.as_view(), name = "products_create_view"),
+    url(r'^products/update/(?P<pk>\d+)$',
+        ProductUpdateView.as_view(), name = "products_update_view"),
+    url(r'^products/delete/(?P<pk>\d+)$',
+        ProductDeleteView.as_view(), name = "products_delete_view"),
+
+    url(r'^cart/$', CartView.as_view(), name = "cart"),
+
+    url(r'^orders/$', OrderList.as_view(), name = "orders"),
+    url(r'^orders/(?P<pk>\d+)$', OrderDetail.as_view(), name = "order_detail"),
+
+    url(r'^checkout/$', CheckoutView.as_view(), name = "checkout"),
+    url(r'^checkout/address/$',
+        AddressSelectFormView.as_view(), name = "address_form"),
+    url(r'^checkout/address/add$',
+        UserAddressCreateView.as_view(), name = "user_address_create"),
+    url(r'^checkout/final/$',
+        CheckoutFinalView.as_view(), name = "checkout_final")
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

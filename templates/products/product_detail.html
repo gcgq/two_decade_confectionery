@@ -1,4 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
-  product detail
+  <h3>product detail {{object.name}}</h3>
+
+  <div id="alert-msg">
+
+  </div>
+
+  {% if object.productimage_set.count > 0 %}
+    <div class="">
+        {% for img in object.productimage_set.all %}
+          {{img.image.file}}<br>
+          {{img.image.url }}<br>
+          <img src="{{img.image.url}}" alt="">
+        {% endfor %}
+    </div>
+  {% endif %}
+
+  <ul>
+    <li>{{object.name}}</li>
+    <li>{{object.description}}</li>
+    <li class="price">{{object.price}}</li>
+    {% if object.sale_price != None %}
+      <li class="sale-price">{{object.sale_price}}</li>
+    {% endif %}
+  </ul>
+
+  <form id="add-to-cart-form" class="" action="{% url 'products_list_view' %}" method="get">
+    <select class="" name="">
+      {% for vari in object.variation_set.all %}
+      <option value="{{vari.id}}">{{vari}}</option>
+      {% endfor %}
+    </select>
+
+    <input type="number" name="qty" value="1">
+    <input id="submit-btn" type="submit" name="submit" value="Add To Cart">
+  </form>
 {% endblock content %}

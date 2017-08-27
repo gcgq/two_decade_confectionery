@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,6 +30,19 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+EMAIL_BACKEND = "sgbackend.SendGridBackend"
+SENDGRID_API_KEY = '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'
+
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+LOGIN_REDIRECT_URL = "products"
+
+SITE_ID = 1
+SITES = ["http://localhost:8000", "http://127.0.0.1:8000"]
+CRISPY_TEMPLATE_PACK = "bootstrap3"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,8 +52,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'crispy_forms',
 
     'products',
+    'carts',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -110,15 +134,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -127,5 +146,27 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     ]
-    
+
 MEDIA_URL = '/media/'
+
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+       {'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile', 'user_friends'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time'],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC':  lambda request: 'en_US',
+        'VERIFIED_EMAIL': True,
+        'VERSION': 'v2.4'}}

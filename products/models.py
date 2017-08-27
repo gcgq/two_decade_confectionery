@@ -3,7 +3,7 @@ from django.db.models.signals import pre_save, post_save
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
 
-from django.conf import settings
+# from django.conf import settings
 # from django.core.validators import MinValueValidator
 # validators=[MinValueValidator(1)]
 # Create your models here.
@@ -19,15 +19,17 @@ class Product(models.Model):
     )
 
     name = models.CharField(max_length=150)
-    category = models.CharField(max_length=10,choices=CATEGORY_CHOICES, default=TRUFFLE)
+    category = models.CharField(max_length=10,
+        choices=CATEGORY_CHOICES, default=TRUFFLE)
     description = models.CharField(max_length=1000)
-    price = models.DecimalField(max_digits=7, decimal_places=2, default=2.99)
+    price = models.DecimalField(max_digits=7, decimal_places=2,
+        default=2.99)
     sale_price = models.DecimalField(max_digits=7, decimal_places=2,
         default=None, blank=True, null=True)
-    shipping_weight = models.DecimalField(max_digits=5, decimal_places=2,
-        default=0.05)
+    weight = models.DecimalField(max_digits=10, decimal_places=4, default=0.0)
+    available_inventory = models.PositiveIntegerField(default=100)
     slug = models.SlugField(blank=True, default=None)
-    active = models.BooleanField( default=True )
+    active = models.BooleanField(default=True)
     # objects=ProductManager()
 
     def __str__(self):
@@ -48,9 +50,10 @@ class Variation(models.Model):
     product = models.ForeignKey(Product)
     name = models.CharField(max_length=150)
     # description = models.CharField(max_length=1000)
-    price = models.DecimalField(max_digits=7, decimal_places=2, default=4.99)
+    price = models.DecimalField(max_digits=7, decimal_places=2,
+        default=4.99)
     sale_price = models.DecimalField(max_digits=7, decimal_places=2,
-                                     default=None, blank=True, null=True)
+        default=None, blank=True, null=True)
     active = models.BooleanField( default=True )
     size = models.DecimalField( decimal_places=0, max_digits=7)
 
@@ -64,14 +67,17 @@ class Variation(models.Model):
         else:
             return self.price
 
+    def get_title(self):
+        return "{}, {}".format(self.product.name, self.name)
+
     def get_absoulute_url(self):
         return self.product.get_absolute_url()
 
     def add_to_cart(self):
-        pass
+        return "{}/?item={}&qty=1".format(reverse("cart"), self.id)
 
     def remove_from_cart(self):
-        pass
+        return "{}?item={}&qty=1&delete=True".format(reverse("cart"), self.id)
 
 def on_variation_save(sender, instance, *args, **kwargs):
     print("on_variation_save() parameters: sender: {}, instance: {}".format(sender, instance))

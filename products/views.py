@@ -24,12 +24,12 @@ class ProductDetailView(SlugMixin, DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ["name", "description", "price",  "shipping_weight"]
+    fields = ["name", "description", "category", "price",  "shipping_weight"]
     success_url = "/products/"
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ["name", "description", "price", "sale_price", "shipping_weight"]
+    fields = ["name", "description", "category", "price", "sale_price", "shipping_weight","active"]
     success_url = "/products/"
 
 class ProductDeleteView(DeleteView):

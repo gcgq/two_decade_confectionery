@@ -15,6 +15,8 @@ from orders.models import UserCheckout, Order, UserAddress
 from orders.forms import GuestCheckoutForm
 from orders.mixins import CartOrderMixin
 
+import pdb
+
 import braintree
 braintree.Configuration.configure(
     braintree.Environment.Sandbox,
@@ -118,20 +120,6 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
     template_name = "carts/checkout_view.html"
     form_class = GuestCheckoutForm
 
-    def get(self, request, *args, **kwargs):
-        get_data = super(CheckoutView, self).get(request, *args, **kwargs)
-        cart = self.get_object()
-        if cart is None:
-            return redirect("cart")
-        new_order = self.get_order()
-        user_checkout_id = request.session.get("user_checkout_id")
-        if user_checkout_id is not None:
-            user_checkout = UserCheckout.objects.get(id = user_checkout_id)
-            if new_order.billing_address is None or new_order.shipping_address is None:
-                return redirect("address_form")
-            new_order.user = user_checkout_id
-            new_order.save()
-        return get_data
 
     def get_success_url(self):
         return reverse("checkout")
@@ -163,9 +151,9 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
             user_checkout.user = self.request.user
             user_checkout.save()
             context["client_token"] = user_checkout.get_client_token()
-            print("request session", self.request.session)
+            # print("request session", self.request.session)
             self.request.session["user_checkout_id"] = user_checkout.id
-            print("request session", self.request.session)
+            # print("request session", self.request.session)
         elif not self.request.user.is_authenticated() and user_check_id is None:
             context["login_form"] = AuthenticationForm()
             context["next_url"] = self.request.build_absolute_uri()
@@ -182,6 +170,7 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
         context["order"] = self.get_order()
         context["form"] = self.get_form()
         context["user_can_continue"] = user_can_continue
+        print(context, "---User Checkout ID ---", user_check_id)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -195,6 +184,25 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+    def get(self, request, *args, **kwargs):
+        print(request.GET)
+        # pdb.set_trace()
+        get_data = super(CheckoutView, self).get(request, *args, **kwargs)
+        cart = self.get_object()
+        if cart is None:
+            return redirect("cart")
+        new_order = self.get_order()
+        print('get(): request.session.get("user_checkout_id"): ', request.session.get("user_checkout_id"))
+        user_checkout_id = request.session.get("user_checkout_id")
+        if user_checkout_id is not None:
+            user_checkout = UserCheckout.objects.get(id = user_checkout_id)
+            print("CheckoutView, get(), user_checkout", user_checkout)
+            if new_order.billing_address is None or new_order.shipping_address is None:
+                return redirect("address_form")
+            new_order.user = user_checkout #user_checkout_id
+            new_order.save()
+        return get_data
 
 class CheckoutFinalView(CartOrderMixin, View):
     def get(self, request, *args, **kwargs):

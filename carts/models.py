@@ -32,7 +32,7 @@ def after_cartitem_save(sender, instance, *args, **kwargs):
 
 pre_save.connect(on_cartitem_save, sender = CartItem)
 
-post_save.connect(after_cartitem_save,sender = CartItem)
+post_save.connect(after_cartitem_save, sender = CartItem)
 post_delete.connect(after_cartitem_save, sender = CartItem)
 
 class Cart(models.Model):

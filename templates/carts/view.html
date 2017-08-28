@@ -50,7 +50,7 @@
     <tr id="item-{{item.item.id}}">
       <td>{{ item.item.get_title }}</td>
       <td>
-        <form action= "{% url 'cart' %}" method = "GET">
+        <form action= "." method = "GET">
           <input type='hidden' name='item' value='{{ item.item.id }}' />
           <input id = "item-qty" type="number" name="qty" value="{{ item.quantity }}">
           <input type='submit' class='btn-update btn btn-link' value='Update item'/>
@@ -74,7 +74,7 @@
     </tr>
     <tr>
     	<td colspan='4' class='text-right'>
-        <a class="btn btn-warning" href="{% url 'checkout_final' %}">Checkout</a></td>
+        <a class="btn btn-warning" href="{% url 'checkout' %}">Checkout</a></td>
     </tr>
   </table>
   {% endif %}

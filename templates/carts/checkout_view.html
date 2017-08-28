@@ -1,13 +1,23 @@
 {% extends "base.html" %}
-{% load crispy_form_tags %}
+{% load i18n %}
+{% load crispy_forms_tags %}
 
 {% block content%}
+<script type="text/javascript">
+  {% block jquery %}
+    var clientToken = "{{client_token}}";
+
+    braintree.setup(clientToken, "dropin", {
+      container: "payment-form"
+    });
+  {% endblock jquery %}
+</script>
   {{ client_token }}
 
   {% if not user_can_continue %}
   <div class="">
     <p>Continue as guest</p>
-    <form class="" action="" method="post">
+    <form class="" action="{% url 'checkout' %}" method="post">
       {% csrf_token %}
       {{ form | crispy }}
       <input type="submit" name="btn btn-success" value="Continue As Guest">
@@ -15,7 +25,8 @@
   </div>
   <div class="">
     <p class="lead">Login to Continue</p>
-    <form class="" action="index.html" method="post">
+    <form class="" action="{% url 'checkout' %}" method="post">
+      {% csrf_token %}
       {{ login_form | crispy }}
       <input type="hidden" name="next" value="{{next_url}}">
       <input type="submit" name="btn btn-success" value="Login">

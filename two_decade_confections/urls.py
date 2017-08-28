@@ -18,12 +18,14 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 from products.views import ProductListView, ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView
 from carts.views import CartView, CheckoutView, CheckoutFinalView
 from orders.views import AddressSelectFormView, UserAddressCreateView, OrderList, OrderDetail
 
 urlpatterns = [
+    url(r"^$", TemplateView.as_view(template_name = "base.html"), name="index"),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
 

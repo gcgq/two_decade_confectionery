@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 
+from django.views import View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
@@ -24,12 +26,12 @@ class ProductDetailView(SlugMixin, DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ["name", "description", "category", "price",  "shipping_weight"]
+    fields = ["name", "description", "category", "price",  "weight"]
     success_url = "/products/"
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ["name", "description", "category", "price", "sale_price", "shipping_weight","active"]
+    fields = ["name", "description", "category", "price", "sale_price", "weight","active"]
     success_url = "/products/"
 
 class ProductDeleteView(DeleteView):

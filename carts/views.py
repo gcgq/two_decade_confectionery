@@ -16,13 +16,15 @@ from orders.forms import GuestCheckoutForm
 from orders.mixins import CartOrderMixin
 
 import braintree
-
 braintree.Configuration.configure(
     braintree.Environment.Sandbox,
-    'PRIVATE_ID',
-    'PUBLIC_KEY',
-    'MERCHANT_ID'
+    '79ca5f34fbc3b9eb1157211d37731a0e',
+    'jnpbmcwvp3v67pk6',
+    'f3yp35zj726j2xz4'
 )
+# 'PRIVATE_ID',
+# 'PUBLIC_KEY',
+# 'MERCHANT_ID'
 
 if settings.DEBUG:
     braintree.Configuration.configure(braintree.Environment.Sandbox,
@@ -43,11 +45,12 @@ class CartView(SingleObjectMixin, View):
             cart = Cart()
             cart.save()
             cart_id = cart.id
-            self.request.session["cart_id"]=cart.id
+            self.request.session["cart_id"] = cart.id
         cart = Cart.objects.get(id=cart_id)
         if self.request.user.is_authenticated():
             cart.user = self.request.user
             cart.save()
+        print("get_object() cart: ", cart)
         return cart
 
     def get(self, request, *args, **kwargs):
@@ -80,7 +83,7 @@ class CartView(SingleObjectMixin, View):
                 return HttpResponseRedirect(reverse("cart"))
 
         if request.is_ajax():
-            print(request.GET.get("item ajax request"))
+            print("ajax request: ", request.GET.get("item"))
             try:
                 total = cart_item.line_item_total
             except:
@@ -99,12 +102,14 @@ class CartView(SingleObjectMixin, View):
                 "tax_total": tax_total,
                 "total_items": total_items,
             }
-
+            print("ajax data: ", data )
             return JsonResponse(data)
 
         context = {
             "object":self.get_object()
         }
+        print("stuff", context["object"])
+
         template = self.template_name
         return render(request, template, context)
 
@@ -122,8 +127,11 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
         user_checkout_id = request.session.get("user_checkout_id")
         if user_checkout_id is not None:
             user_checkout = UserCheckout.objects.get(id = user_checkout_id)
-        if new_order.billing_address is None or new_order.shipping_address is None:
-            return redirect("address_form")
+            if new_order.billing_address is None or new_order.shipping_address is None:
+                return redirect("address_form")
+            new_order.user = user_checkout_id
+            new_order.save()
+        return get_data
 
     def get_success_url(self):
         return reverse("checkout")
@@ -135,7 +143,7 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
         return cart
 
     def get_context_data(self, *args, **kwargs):
-        context = super(CheckoutView, self).get_context_data( *argr, **kwargs)
+        context = super(CheckoutView, self).get_context_data( *args, **kwargs)
         user_can_continue = False
         user_check_id = self.request.session.get("user_checkout_id")
         print("user_check_id: ", user_check_id)
@@ -218,5 +226,4 @@ class CheckoutFinalView(CartOrderMixin, View):
             else:
                 messages.success(request, "{}".format(result.message))
                 return redirect("checkout")
-
-            return redirect("order_detail", pk=order.pk)
+        return redirect("order_detail", pk=order.pk)

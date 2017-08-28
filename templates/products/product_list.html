@@ -1,14 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
   {# {{ block super }}#}
+<div class="grid-container">
   {% for product in object_list %}
-  <div class="">
-    {{product.name}}
+  <div class="product">
+    <h4>
+      <a href="/products/{{product.id}}">{{product.name}}</a>
+    </h4>
+    <div class="product-img">
+      {% if product.productimage_set.all.count == 0 %}
+      <img src="http://via.placeholder.com/400x400?text=placeholder">
+      {%else%}
+      <img src="{{product.productimage_set.first.image.url}}" alt="">
+      {% endif%}
+    </div>
     {{product.description}}
-    <img src="{{product.productimage_set.first.image.url}}" alt="">
   </div>
   {% endfor %}
-  <p>
-    product list
-  </p>
+</div>
+
+
 {% endblock content %}

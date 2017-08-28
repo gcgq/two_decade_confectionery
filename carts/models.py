@@ -23,22 +23,26 @@ def on_cartitem_save(sender, instance, *args, **kwargs):
     qty = instance.quantity
     price = instance.item.get_price()
     if int(qty) >= 1:
-        instance.line_item_total = Decimal(qty) * Decimal(price)
+        price = instance.item.get_price()
+        line_item_total = Decimal(qty) * Decimal(price)
+        instance.line_item_total = line_item_total
 
 def after_cartitem_save(sender, instance, *args, **kwargs):
     instance.cart.update_subtotal()
 
 pre_save.connect(on_cartitem_save, sender = CartItem)
+
+post_save.connect(after_cartitem_save,sender = CartItem)
 post_delete.connect(after_cartitem_save, sender = CartItem)
 
 class Cart(models.Model):
+    # print("settings.auth_user_model", settings.AUTH_USER_MODEL)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null = True, blank = True)
     items = models.ManyToManyField(Variation, through = CartItem)
 
     subtotal = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
     tax_percentage = models.DecimalField(max_digits = 9, decimal_places = 2, default = 0.00)
     tax_total = models.DecimalField(max_digits = 9, decimal_places = 2, default = 0.00)
-
     total = models.DecimalField(max_digits = 10, decimal_places = 2, default = 0.00)
 
     timestamp = models.DateTimeField(auto_now_add = True, auto_now = False)

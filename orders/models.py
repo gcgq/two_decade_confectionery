@@ -8,11 +8,11 @@ from django.views.generic.list import ListView
 from carts.models import Cart
 import braintree
 
-braintree.Configuration.configure(
-    braintree.Environment.Sandbox,
-    'PRIVATE_ID',
-    'PUBLIC_KEY',
-    'MERCHANT_ID')
+# braintree.Configuration.configure(
+#     braintree.Environment.Sandbox,
+#     'PRIVATE_ID',
+#     'PUBLIC_KEY',
+#     'MERCHANT_ID')
 
 if settings.DEBUG:
     braintree.Configuration.configure(
@@ -32,14 +32,15 @@ class UserCheckout(models.Model):
 
     @property
     def get_braintree_id(self):
-        if not self.braintree_id:
+        instance = self
+        if not instance.braintree_id:
             result = braintree.Customer.create({
-                "email": self.email,
-            })
+                "email": instance.email,
+                })
             if result.is_success:
-                self.braintree_id = result.customer_id
-                self.save()
-            return self.braintree_id
+                instance.braintree_id = result.customer_id
+                instance.save()
+            return instance.braintree_id
 
     def get_client_token(self):
         customer_id = self.get_braintree_id()

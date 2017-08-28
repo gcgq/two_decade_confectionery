@@ -3,7 +3,7 @@ from django.db.models.signals import pre_save, post_save
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
 
-# from django.conf import settings
+from django.conf import settings
 # from django.core.validators import MinValueValidator
 # validators=[MinValueValidator(1)]
 # Create your models here.
@@ -86,14 +86,6 @@ def on_variation_save(sender, instance, *args, **kwargs):
 
     #create default half-dozen and one dozen variations
     if instance.variation_set.count() == 0:
-        half_dozen = Variation(
-            product = instance,
-            name = "Half-Dozen",
-            size = 6,
-            price = instance.price * 6,
-        )
-        half_dozen.save()
-        print("Half-Dozen {} created".format( half_dozen.product.name ))
 
         one_dozen = Variation(
             product = instance,
@@ -104,12 +96,31 @@ def on_variation_save(sender, instance, *args, **kwargs):
         one_dozen.save()
         print("One Dozen {} created".format( half_dozen.product.name ))
 
+        half_dozen = Variation(
+            product = instance,
+            name = "Half-Dozen",
+            size = 6,
+            price = instance.price * 6,
+        )
+        half_dozen.save()
+        print("Half-Dozen {} created".format( half_dozen.product.name ))
+
+
+        individual = Variation(
+            product = instance,
+            name = "Half-Dozen",
+            size = 1,
+            price = instance.price * 1,
+        )
+        individual.save()
+        print("Individual {} created".format( half_dozen.product.name ))
+
 post_save.connect(on_variation_save, sender=Product)
 
 def image_upload_to(instance, filename):
     basename, file_extension = filename.split(".")
     new_filename = "{}.{}".format(instance.product.id, file_extension)
-    return settings.STATIC_URL + "/products/{}".format(new_filename)
+    return settings.STATIC_ROOT + "static/products/{}".format(new_filename)
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product)

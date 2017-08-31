@@ -1,62 +1,44 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <nav class="navbar navbar-default" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"></a>
+{% extends "base.html" %}
+{% block content %}
+
+  <div id="parallax-backgrounds">
+    <div class="parallax2"></div>
+    <div class="parallax3"></div>
+    <div class="parallax4"></div>
+    <!-- <div class="parallax1"></div> -->
+  </div>
+
+  <div id="container">
+    <div class="row fp">
+      <div class="col-sm-8 col-xs-12">
+        <div class="fp-copy">
+          <h2>Lorem ipsum dolor sit amet,</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam laboriosam dolor animi error, autem eligendi incidunt totam dignissimos, vitae, nobis, voluptatem officia quaerat laudantium quisquam fugit impedit neque itaque molestiae.</p>
         </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#"></a></li>
-
-          </ul>
-          <form class="navbar-form navbar-left" role="search">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-          </form>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"></a></li>
-
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
-
-    <div class="backgrounds">
-      <div class="parallax"></div>
-      <div class="parallax2"></div>
-      <div class="parallax3"></div>
-      <div class="parallax4"></div>
+      </div>
+      <div class="col-sm-4 col-xs-12 fp-img">
+        <img src="/static/front-page/fp-macarons.jpeg" alt="">
+      </div>
     </div>
-    <div class="grid-container">
-      <div class="d1">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-      <div class="d2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-      <div class="d3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-      <div class="d4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-      <div class="d5">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-      <div class="d6">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-      <div class="d7">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-      <div class="d8">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+    <div class="row fp">
+      <div class="col-sm-4 col-xs-12 fp-img">
+        <img src="/static/front-page/fp-cupcake.jpeg" alt="">
+      </div>
+      <div class="col-sm-8 col-xs-12 fp-copy">
+        <h2>Lorem ipsum dolor sit amet,</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam laboriosam dolor animi error, autem eligendi incidunt totam dignissimos, vitae, nobis, voluptatem officia quaerat laudantium quisquam fugit impedit neque itaque molestiae.</p>
+      </div>
     </div>
+    <div class="row fp">
+      <div class="col-sm-8 col-xs-12 fp-copy">
+        <h2>Lorem ipsum dolor sit amet,</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam laboriosam dolor animi error, autem eligendi incidunt totam dignissimos, vitae, nobis, voluptatem officia quaerat laudantium quisquam fugit impedit neque itaque molestiae.</p>
+      </div>
+      <div class="col-sm-4 col-xs-12 fp-img">
+        <img src="/static/front-page/fp-truffles.jpg" alt="">
+      </div>
+    </div>
+  </div>
 
 
-  </body>
-</html>
+{% endblock content %}

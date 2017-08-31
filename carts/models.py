@@ -1,17 +1,17 @@
 from decimal import Decimal
-
-from django.db import models
-from django.db.models.signals import pre_save, post_save, post_delete
 from django.conf import settings
+from django.db import models
 
-from products.models import Variation
 # Create your models here.
+from products.models import Variation
+
+from django.db.models.signals import pre_save,post_save,post_delete
 
 class CartItem(models.Model):
     cart = models.ForeignKey("Cart")
     item = models.ForeignKey(Variation)
     quantity = models.PositiveIntegerField(default = 1)
-    line_item_total = models.DecimalField(max_digits = 10, decimal_places = 2)
+    line_item_total = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.item.name
@@ -19,40 +19,37 @@ class CartItem(models.Model):
     def remove(self):
         return self.item.remove_from_cart()
 
-def on_cartitem_save(sender, instance, *args, **kwargs):
-    qty = instance.quantity
-    price = instance.item.get_price()
-    if int(qty) >= 1:
-        price = instance.item.get_price()
-        line_item_total = Decimal(qty) * Decimal(price)
-        instance.line_item_total = line_item_total
+def cart_item_pre_save_receiver(sender, instance, *args, **kwargs):
+	qty = instance.quantity
+	if int(qty) >= 1:
+		price = instance.item.get_price()
+		line_item_total = Decimal(qty) * Decimal(price)
+		instance.line_item_total = line_item_total
 
-def after_cartitem_save(sender, instance, *args, **kwargs):
+pre_save.connect(cart_item_pre_save_receiver, sender=CartItem)
+
+def cart_item_post_save_receiver(sender,instance,*args,**kwargs):
     instance.cart.update_subtotal()
 
-pre_save.connect(on_cartitem_save, sender = CartItem)
+post_save.connect(cart_item_post_save_receiver,sender = CartItem)
 
-post_save.connect(after_cartitem_save, sender = CartItem)
-post_delete.connect(after_cartitem_save, sender = CartItem)
+post_delete.connect(cart_item_post_save_receiver, sender = CartItem)
 
 class Cart(models.Model):
-    # print("settings.auth_user_model", settings.AUTH_USER_MODEL)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null = True, blank = True)
-    items = models.ManyToManyField(Variation, through = CartItem)
-
-    subtotal = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
-    tax_percentage = models.DecimalField(max_digits = 9, decimal_places = 2, default = 0.00)
-    tax_total = models.DecimalField(max_digits = 9, decimal_places = 2, default = 0.00)
-    total = models.DecimalField(max_digits = 10, decimal_places = 2, default = 0.00)
-
-    timestamp = models.DateTimeField(auto_now_add = True, auto_now = False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,null=True,blank=True)
+    items = models.ManyToManyField(Variation,through=CartItem)
+    timestamp = models.DateTimeField(auto_now_add = True,auto_now=False)
     updated = models.DateTimeField(auto_now_add = False, auto_now = True)
+    subtotal = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
+    tax_percentage = models.DecimalField(max_digits=50, decimal_places = 2, default=0.085)
+    tax_total = models.DecimalField(max_digits=50,decimal_places=2,default=0.00)
+    total = models.DecimalField(max_digits=50,decimal_places=2,default=0.00)
 
     def __str__(self):
         return str(self.id)
 
     def update_subtotal(self):
-        print("update total")
+        print("updating...")
         subtotal = 0
         items = self.cartitem_set.all()
         for item in items:
@@ -60,12 +57,11 @@ class Cart(models.Model):
         self.subtotal = subtotal
         self.save()
 
-def on_cart_save(sender, instance, *args, **kwargs):
-    #caluculate tax on cart save
+def do_tax_total_receiver(sender, instance, *args, **kwargs):
     subtotal = instance.subtotal
     tax_total = round(subtotal * instance.tax_percentage, 2)
-    total = round(tax_total + subtotal, 2)
-    instance.tax_total =tax_total
+    total = round(subtotal + tax_total,2)
+    instance.tax_total = tax_total
     instance.total = total
 
-pre_save.connect(on_cart_save, sender = Cart)
+pre_save.connect(do_tax_total_receiver, sender = Cart)

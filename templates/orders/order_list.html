@@ -1,9 +1,27 @@
 {% extends "base.html" %}
+
+
+
 {% block content %}
-  {% for object in object_list %}
-    <li>
-      {{ object.id }}
-      {{ object.cart.items.all }}
-    </li>
-  {% endfor %}
+
+
+{% for object in object_list %}
+
+<li>
+order id: {{ object.id }}
+<ul>
+	{% for item in object.cart.items.all %}
+	<li>{{item.product.name}}, {{item.name}}</li>
+	<li>${{item.product.price}} each</li>
+	<li>qty: {{item.size}}</li>
+	{% endfor %}
+	<li>shipping: {{ object.shipping_total_price }}</li>
+	<li>order total: {{ object.order_total }}</li>
+</ul>
+
+</li>
+
+{% endfor %}
+
+
 {% endblock %}

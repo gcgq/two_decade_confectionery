@@ -28,21 +28,9 @@ SECRET_KEY = 'v_#f-f-8*wq(-s2#^z6q$ho2-jp3*6kcve9cyt=$lwrh+r%&^_'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ["www.herokuapps.com","localhost:8000"]
 
 
-EMAIL_BACKEND = "sgbackend.SendGridBackend"
-SENDGRID_API_KEY = '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'
-
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-LOGIN_REDIRECT_URL = "products_list_view"
-
-SITE_ID = 3
-# SITES = ["http://localhost:8000", "http://127.0.0.1:8000"]
-
-CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 # Application definition
 
@@ -135,6 +123,20 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+EMAIL_BACKEND = "sgbackend.SendGridBackend"
+SENDGRID_API_KEY = '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'
+
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+LOGIN_REDIRECT_URL = "products_list_view"
+
+SITE_ID = 3
+# SITES = ["http://localhost:8000", "http://127.0.0.1:8000"]
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -181,7 +183,17 @@ SOCIALACCOUNT_PROVIDERS = \
         'VERSION': 'v2.4'}}
 
 # braintree setup
-BRAINTREE_PRIVATE='79ca5f34fbc3b9eb1157211d37731a0e'
-BRAINTREE_PUBLIC='jnpbmcwvp3v67pk6',
-BRAINTREE_MERCHANT_ID='f3yp35zj726j2xz4'
-ENVIRONMENT='SANDBOX'
+# BRAINTREE_PRIVATE='137df9b5c842c81fdff398277ff5253a'
+# BRAINTREE_PUBLIC='y4gss24g5ypb3837',
+# BRAINTREE_MERCHANT_ID='f3yp35zj726j2xz4'
+# ENVIRONMENT='SANDBOX'
+
+# BRAINTREE_PRIVATE='79ca5f34fbc3b9eb1157211d37731a0e'
+# BRAINTREE_PUBLIC='jnpbmcwvp3v67pk6',
+# BRAINTREE_MERCHANT_ID='f3yp35zj726j2xz4'
+# ENVIRONMENT='SANDBOX'
+
+# BRAINTREE_PUBLIC = 'r6k25wjjgrs85k5k'
+# BRAINTREE_PRIVATE = '3e8a367a637ec65a728e2c17e582e6bb'
+# BRAINTREE_MERCHANT_ID = '34hkzh8p357qypjk'
+# ENVIRONMENT = 'SANDBOX'

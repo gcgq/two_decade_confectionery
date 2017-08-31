@@ -1,12 +1,23 @@
 from django.db import models
-from django.db.models.signals import pre_save, post_save
+from django.conf import settings
+
+# Create your models here.
+from django.db.models.signals import pre_save,post_save
 from django.utils.text import slugify
+
+###### Checking to find out if a product is active (not discontinued) or not ######
 from django.core.urlresolvers import reverse
 
-from django.conf import settings
-# from django.core.validators import MinValueValidator
-# validators=[MinValueValidator(1)]
-# Create your models here.
+class ProductQuerySet(models.query.QuerySet):
+    def active(self):
+        return self.filter(active=True)
+
+class ProductManager(models.Manager):
+    def get_queryset(self):
+        return ProductQuerySet(self.model, using=self._db)
+
+    def all(self,*args,**kwargs):
+        return self.get_queryset().active()
 
 class Product(models.Model):
     TRUFFLE = 'Truffle'
@@ -30,7 +41,7 @@ class Product(models.Model):
     available_inventory = models.PositiveIntegerField(default=100)
     slug = models.SlugField(blank=True, default=None)
     active = models.BooleanField(default=True)
-    # objects=ProductManager()
+    objects=ProductManager()
 
     def __str__(self):
         return self.name
@@ -94,7 +105,7 @@ def on_variation_save(sender, instance, *args, **kwargs):
             price = instance.price * 12,
         )
         one_dozen.save()
-        print("One Dozen {} created".format( half_dozen.product.name ))
+        print("One Dozen {} created".format( one_dozen.product.name ))
 
         half_dozen = Variation(
             product = instance,
@@ -108,12 +119,12 @@ def on_variation_save(sender, instance, *args, **kwargs):
 
         individual = Variation(
             product = instance,
-            name = "Half-Dozen",
+            name = "Individual",
             size = 1,
             price = instance.price * 1,
         )
         individual.save()
-        print("Individual {} created".format( half_dozen.product.name ))
+        print("Individual {} created".format( individual.product.name ))
 
 post_save.connect(on_variation_save, sender=Product)
 

@@ -25,22 +25,22 @@ from carts.views import CartView, CheckoutView, CheckoutFinalView
 from orders.views import AddressSelectFormView, UserAddressCreateView, OrderList, OrderDetail
 
 urlpatterns = [
-    url(r"^$", TemplateView.as_view(template_name = "base.html"), name="index"),
+    url(r"^$", TemplateView.as_view(template_name = "index.html"), name="index"),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
 
     url(r'^products/$',
         ProductListView.as_view(), name = "products_list_view"),
+    url(r'^create/product$',
+        ProductCreateView.as_view(), name = "products_create_view"),
+    url(r'^update/product/(?P<pk>\d+)$',
+        ProductUpdateView.as_view(), name = "products_update_view"),
+    url(r'^delete/product/(?P<pk>\d+)$',
+        ProductDeleteView.as_view(), name = "products_delete_view"),
     url(r'^products/(?P<pk>\d+)$',
         ProductDetailView.as_view(), name = "products_detail_view"),
     url(r'^products/(?P<slug>[\w-]+)$',
         ProductDetailView.as_view(), name = "products_slug_view"),
-    url(r'^products/create/$',
-        ProductCreateView.as_view(), name = "products_create_view"),
-    url(r'^products/update/(?P<pk>\d+)$',
-        ProductUpdateView.as_view(), name = "products_update_view"),
-    url(r'^products/delete/(?P<pk>\d+)$',
-        ProductDeleteView.as_view(), name = "products_delete_view"),
 
     url(r'^cart/$', CartView.as_view(), name = "cart"),
 

@@ -1,65 +1,69 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 <script type="text/javascript">
-  {% block jquery %}
-    // alert("hi")
-    $("#alert-msg").hide()
-    $("#submit-btn").click(function(event){
-      event.preventDefault();
-      var formData = $("#add-to-cart-form").serialize();
-      console.log(formData);
-      //ajax call for add_to_art
-      $.ajax({
-        type:"GET",
-        url: {% url 'cart' %},
-        data: formData,
-        success: function(data){
-          $("#alert-msg").text("Added: " + data.created + " deleted: " + data.deleted).show();
-          console.log(data);
-        },
-        error: function(response, error){
-          console.log(response);
-          console.log(error);
-          // $("#add-to-cart-form").submit();
-        }
-      });
-    });
-  {% endblock jquery %}
+{% block JQuery %}
+$("#submit-btn").click(function(event){
+  event.preventDefault()
+  var formData = $("#add-form").serialize()
+  console.log(formData)
+
+  // AJAX Call for add_to_cart
+  $.ajax({
+    type: "GET",
+    url: {% url 'cart' %},
+    data: formData,
+    success: function(data){
+      $("#JQuery-message").text("Added" + data.created + "Deleted" + data.deleted).show()
+      console.log(data)
+    },
+    error: function(response,error){
+      console.log(response)
+      console.log(error)
+      $("#add-form").submit();
+    }
+  });
+});
+{% endblock JQuery %}
+
 </script>
-{% block content %}
-  <h3>product detail {{object.name}}</h3>
 
-  <div id="alert-msg">
+  {% block content %}
+  <div class="product-templates background"></div>
+  <div class="row">
 
-  </div>
+    <div class="col-md-8">
+    <h1>{{object.name}}</h1>
+    {% if object.productimage_set.count > 0 %}
 
-  {% if object.productimage_set.count > 0 %}
-    <div class="">
-        {% for img in object.productimage_set.all %}
-          {{img.image.file}}<br>
-          {{img.image.url }}<br>
-          <img src="{{img.image.url}}" alt="">
-        {% endfor %}
-    </div>
-  {% endif %}
+      <div>
+      {% for img in object.productimage_set.all %}
 
-  <ul>
-    <li>{{object.name}}</li>
-    <li>{{object.description}}</li>
-    <li class="price">{{object.price}}</li>
-    {% if object.sale_price != None %}
-      <li class="sale-price">{{object.sale_price}}</li>
-    {% endif %}
-  </ul>
 
-  <form id="add-to-cart-form" class="" action="{% url 'cart' %}" method="get">
-    <select class="" name="item">
-      {% for vari in object.variation_set.all %}
-      <option value="{{vari.id}}">{{vari}}</option>
+      <img class='img-responsive' src='{{ img.image.url }}' />
+
       {% endfor %}
-    </select>
 
-    <input type="number" name="qty" value="1">
-    <input id="submit-btn" type="submit" name="submit" value="Add To Cart">
+      </div>
+
+      {% endif %}
+    <p>{{object.description}}</p>
+  </div>
+  <div class="col-md-4">
+    <p id="JQuery-message" class="alert alert-success"></p>
+    <p>{{object.price}}</p>
+
+    {% if object.variation_set.count >= 1 %}
+    <form id = "add-form" method = "GET" action = "{% url 'cart' %}">
+    <select class="" name="item">
+      {% for vari_choice in object.variation_set.all %}
+          <option value="{{vari_choice.id}}">{{ vari_choice }}</option>
+        {% endfor %}
+    </select>
+    {% else %}
+    {% endif %}
+    <input id="submit-btn" type="submit" name="" class="btn btn-success" value="Add to Cart"/>
   </form>
-{% endblock content %}
+  </div>
+</div>
+{% endblock %}

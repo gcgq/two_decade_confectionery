@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-  {# {{ block super }}#}
+{{ block.super }}
+<div class="product-templates background"></div>
 <div class="grid-container">
   {% for product in object_list %}
   <div class="product">
     <h4>
-      <a href="/products/{{product.id}}">{{product.name}}</a>
+      <a href="/products/{{product.id}}">{{product.name}}</a><br>
+      ${{product.price}}
     </h4>
     <div class="product-img">
       {% if product.productimage_set.all.count == 0 %}
@@ -14,7 +16,9 @@
       <img src="{{product.productimage_set.first.image.url}}" alt="">
       {% endif%}
     </div>
-    {{product.description}}
+    <div class="description">
+      {{ product.description }}
+    </div>
   </div>
   {% endfor %}
 </div>

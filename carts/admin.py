@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Cart, CartItem
 
 # Register your models here.
+from .models import Cart, CartItem
 
 class CartItemInline(admin.TabularInline):
     model = CartItem
+
 class CartAdmin(admin.ModelAdmin):
     inlines = [
         CartItemInline
@@ -12,5 +13,4 @@ class CartAdmin(admin.ModelAdmin):
     class Meta:
         model = Cart
 
-# admin.site.register(CartItem, CartItemInline)
-admin.site.register(Cart, CartAdmin)
+admin.site.register(Cart,CartAdmin)

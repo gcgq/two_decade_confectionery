@@ -66,6 +66,7 @@ class Order(models.Model):
     shipping_total_price = models.DecimalField(
         max_digits=50, decimal_places=2, default=5.99)
     order_total = models.DecimalField(max_digits=50, decimal_places=2, )
+    order_total_in_cents = models.IntegerField()
     # order_id
 
     def __str__(self):
@@ -80,6 +81,6 @@ def order_pre_save(sender, instance, *args, **kwargs):
     cart_total = instance.cart.total
     order_total = Decimal(shipping_total_price) + Decimal(cart_total)
     instance.order_total = order_total
-
+    instance.order_total_in_cents = int(order_total*100)
 
 print(pre_save.connect(order_pre_save, sender=Order))

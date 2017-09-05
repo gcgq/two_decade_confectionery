@@ -5,6 +5,7 @@ from django.views.generic.detail import SingleObjectMixin, DetailView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.edit import FormMixin
+from django.conf import settings
 
 from products.models import Variation
 from .models import Cart, CartItem
@@ -173,14 +174,24 @@ class CheckoutView(CartOrdermixin,FormMixin, DetailView):
             new_order.save()
         return get_data
 
-
+import stripe
+stripe.api_key = settings.STRIPE_API_KEY
 class CheckoutFinalView(CartOrdermixin,View):
     def post(self,request,*args,**kwargs):
         order = self.get_order()
-        if request.POST.get("payment_token") == "ABC":
+        token = request.POST.get("stripeToken")
+        print(token)
+        if token is not None:
             order.mark_completed()
             del request.session["cart_id"]
             del request.session["order_id"]
+            charge = stripe.Charge.create(
+              amount=order.order_total_in_cents,
+              currency="usd",
+              description="Two Decades Order #{}".format(order.id),
+              source=token,
+            )
+            print(charge)
         return redirect("checkout")
 
     def get(self,request,*args,**kwargs):

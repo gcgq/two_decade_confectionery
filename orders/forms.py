@@ -6,13 +6,13 @@ User = get_user_model()
 
 
 class GuestCheckoutForm(forms.Form):
-    email = forms.EmailField()
-    email2 = forms.EmailField(label="Verify Email")
+    email = forms.EmailField(required=False)
+    email2 = forms.EmailField(label="Verify Email", required=False)
 
     def clean_email2(self):
         """ Verify email2 """
-        email = self.cleaned_data.get("email")
-        email2 = self.cleaned_data.get("email2")
+        email = self.cleaned_data.get("email" )
+        email2 = self.cleaned_data.get("email2" )
 
         if email == email2:
             user_exists = User.objects.filter(email=email).count()

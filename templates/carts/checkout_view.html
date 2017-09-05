@@ -17,9 +17,9 @@
 </div>
 <div class='col-sm-6'>
 <p class='lead'>Login to Continue</p>
-<form method='POST' action="{% url 'checkout' %}"> {% csrf_token %}
+<form method='POST' action="{% url 'checkout' %}"> 
+{% csrf_token %}
 {{ login_form|crispy }}
-
 <input type='hidden' name='next' value='{{ next_url }}' />
 <input type='submit' class='btn btn-success' value='Login' />
 </form>
@@ -42,10 +42,21 @@ Order Summary</p>
 {% include "orders/order_summary_short.html" with order=order %}
 
 <br>
-<form class="" action="{% url 'checkout_final' %}" method="POST">{%csrf_token%}
+<!-- <form class="" action="{% url 'checkout_final' %}" method="POST">{%csrf_token%}
     <input type = "hidden" name = "payment_token" value = "ABC">
     <p><b><button type="submit">Complete Order </button></b>
 
+</form> -->
+<form action="{% url 'checkout_final' %}" method="POST">
+  {%csrf_token%}
+  <script
+    src="https://checkout.stripe.com/checkout.js"
+    class="stripe-button"
+    data-key="pk_test_twTgWXEcDqWTvrFNwj6MMxC3"
+    data-name="Two Decade"
+    data-description="Order Total: {{order.order_total}}"
+    data-amount={{order.order_total_in_cents}}>
+  </script>
 </form>
 <br>
 </p>

@@ -180,7 +180,7 @@ class CheckoutFinalView(CartOrdermixin,View):
     def post(self,request,*args,**kwargs):
         order = self.get_order()
         token = request.POST.get("stripeToken")
-        print(token)
+        # print(token)
         if token is not None:
             order.mark_completed()
             del request.session["cart_id"]
@@ -191,7 +191,7 @@ class CheckoutFinalView(CartOrdermixin,View):
               description="Two Decades Order #{}".format(order.id),
               source=token,
             )
-            print(charge)
+            # print(charge)
         return redirect("checkout")
 
     def get(self,request,*args,**kwargs):

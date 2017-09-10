@@ -30,40 +30,43 @@ $("#submit-btn").click(function(event){
 
   {% block content %}
   <div class="product-background"></div>
-  <div class="row">
-
-    <div class="col-md-8">
-    <h1>{{object.name}}</h1>
-    {% if object.productimage_set.count > 0 %}
-
-      <div>
-      {% for img in object.productimage_set.all %}
-
-
-      <img class='img-responsive' src='{{ img.image.url }}' />
-
-      {% endfor %}
-
+  <div class="container product-detail">
+    <div class="row">
+      <div class="col-12">
+        <h1>{{object.name}}</h1>
       </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+      {% if object.productimage_set.count > 0 %}
 
-      {% endif %}
-    <p>{{object.description}}</p>
-  </div>
-  <div class="col-md-4">
-    <p id="JQuery-message" class="alert alert-success"></p>
-    <p>{{object.price}}</p>
+        <div>
+        {% for img in object.productimage_set.all %}
 
-    {% if object.variation_set.count >= 1 %}
-    <form id = "add-form" method = "GET" action = "{% url 'cart' %}">
-    <select class="" name="item">
-      {% for vari_choice in object.variation_set.all %}
-          <option value="{{vari_choice.id}}">{{ vari_choice }}</option>
+
+        <img class='img-responsive' src='{{ img.image.url }}' />
+
         {% endfor %}
-    </select>
-    {% else %}
-    {% endif %}
-    <input id="submit-btn" type="submit" name="" class="btn btn-success" value="Add to Cart"/>
-  </form>
+
+        </div>
+
+        {% endif %}
+    </div>
+    <div class="col-md-4">
+      <p class="product-description">{{object.description}}</p>
+      <p id="JQuery-message" class="alert alert-success"></p>
+      <p>{{object.price}}</p>
+
+      <form id = "add-form" method = "GET" action = "{% url 'cart' %}">
+        <select class="" name="item">
+          {% for vari_choice in object.variation_set.all %}
+              <option value="{{vari_choice.id}}">{{ vari_choice }}</option>
+            {% endfor %}
+        </select>
+        <input id="submit-btn" type="submit" name="" class="btn btn-success" value="Add to Cart"/>
+    </form>
+    </div>
   </div>
 </div>
+
 {% endblock %}

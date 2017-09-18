@@ -20,11 +20,11 @@ class CartItem(models.Model):
         return self.item.remove_from_cart()
 
 def cart_item_pre_save_receiver(sender, instance, *args, **kwargs):
-	qty = instance.quantity
-	if int(qty) >= 1:
-		price = instance.item.get_price()
-		line_item_total = Decimal(qty) * Decimal(price)
-		instance.line_item_total = line_item_total
+    qty = instance.quantity
+    if int(qty) >= 1:
+        price = instance.item.get_price()
+        line_item_total = Decimal(qty) * Decimal(price)
+        instance.line_item_total = line_item_total
 
 pre_save.connect(cart_item_pre_save_receiver, sender=CartItem)
 

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if object.cartitem_set.count < 1 %}
+  <div class="col-sm-6 col-sm-offset-3 text-center">
+    <h1>Your Cart is now empty</h1>
+  </div>
+{% else %}
+  <table class = "table">
+  {{object}}
+  {% for item in object.cartitem_set.all %}
+    <tr>
+      <form action= "." method = "GET">
+        <td>{{ item.item.get_title }}</td>
+        <input type='hidden' name='item' value='{{ item.item.id }}' />
+        <td>
+          <input type="number" name="qty" value="{{ item.quantity }}">
+          <input type='submit' class='btn-default btn' value='Update item'/>
+        </td>
+        <td>{{ item.line_item_total}}</td>
+        <td class="text-right">
+          <a href="{{item.remove}}" class="btn btn-danger">Remove From Cart</a>
+        </td>
+      </form>
+    </tr>
+  {% endfor %}
+    <tr>
+      <td colspan='4' class='text-right'>Subtotal: {{ object.subtotal }}</td>
+    </tr>
+
+    <tr>
+      <td colspan='4' class='text-right'>tax-total (estimated): {{ object.tax_total }}</td>
+    </tr>
+
+    <tr>
+      <td colspan='4' class='text-right'>total: {{ object.total }}</td>
+    </tr>
+
+    <tr>
+    	<td colspan='4' class='text-right'>
+        <a class="btn btn-warning" href="{% url 'checkout'%}">Checkout</a>
+      </td>
+    </tr>
+  </table>
+{% endif %}
+{% endblock %}

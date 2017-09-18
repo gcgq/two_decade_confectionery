@@ -3,65 +3,48 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-
-
 {% if not user_can_continue %}
 <div class='col-sm-6'>
-<p class='lead'>Continue as Guest</p>
+  <h1 class='lead'>Continue as Guest</h1>
 
-<form method='POST' action="{% url 'checkout' %}">{% csrf_token %}
-{{ form|crispy }}
-<input type='submit' class='btn btn-success' value='Continue as Guest' />
+  <form method='POST' action="{% url 'checkout' %}">{% csrf_token %}
+    {{ form|crispy }}
+    <input type='submit' class='btn btn-success' value='Continue as Guest' />
 
-</form>
+  </form>
 </div>
 <div class='col-sm-6'>
-<p class='lead'>Login to Continue</p>
-<form method='POST' action="{% url 'checkout' %}"> 
-{% csrf_token %}
-{{ login_form|crispy }}
-<input type='hidden' name='next' value='{{ next_url }}' />
-<input type='submit' class='btn btn-success' value='Login' />
-</form>
-<p class='text-center'>
-
-<p>{% trans "Forgot password" %}? <a href="{% url 'account_reset_password' %}">{% trans "Reset it" %}</a>!</p>
-<p>{% trans "Not member" %}? <a href="{% url 'account_signup' %}">{% trans "Register" %}</a>!</p>
-</p>
-
+  <h1 class='lead'>Login to Continue</h1>
+  <form method='POST' action="{% url 'checkout' %}">
+    {% csrf_token %}
+    {{ login_form|crispy }}
+    <input type='hidden' name='next' value='{{ next_url }}' />
+    <input type='submit' class='btn btn-success' value='Login' />
+  </form>
+  <p class='text-center'>
+    <p>{% trans "Forgot password" %}? <a href="{% url 'account_reset_password' %}">{% trans "Reset it" %}</a>!</p>
+    <p>{% trans "Not member" %}? <a href="{% url 'account_signup' %}">{% trans "Register" %}</a>!</p>
+  </p>
 </div>
 
 {% else %}
 
-<div class='col-sm-4 col-sm-offset-4 text-center'>
-<p class='lead'>
-Order Summary</p>
-
-<div class="col-sm-4 col-sm-offset-4 text-center">
-
-{% include "orders/order_summary_short.html" with order=order %}
-
-<br>
-<!-- <form class="" action="{% url 'checkout_final' %}" method="POST">{%csrf_token%}
-    <input type = "hidden" name = "payment_token" value = "ABC">
-    <p><b><button type="submit">Complete Order </button></b>
-
-</form> -->
-<form action="{% url 'checkout_final' %}" method="POST">
-  {%csrf_token%}
-  <script
-    src="https://checkout.stripe.com/checkout.js"
-    class="stripe-button"
-    data-key="pk_test_twTgWXEcDqWTvrFNwj6MMxC3"
-    data-name="Two Decade"
-    data-description="Order Total: {{order.order_total}}"
-    data-amount={{order.order_total_in_cents}}>
-  </script>
-</form>
-<br>
-</p>
+<div class='col-sm-12 col-md-6 col-md-offset-3 text-center'>
+  {% include "orders/order_summary_short.html" with order=order %}
+  <br>
+  <form action="{% url 'checkout_final' %}" method="POST">
+    {%csrf_token%}
+    <script
+      src="https://checkout.stripe.com/checkout.js"
+      class="stripe-button"
+      data-key="pk_test_twTgWXEcDqWTvrFNwj6MMxC3"
+      data-name="Two Decade"
+      data-description="Order Total: {{order.order_total}}"
+      data-amount={{order.order_total_in_cents}}>
+    </script>
+  </form>
+  <br>
 </div>
-
 {% endif %}
 
 

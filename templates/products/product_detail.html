@@ -1,8 +1,9 @@
-{% extends "base.html" %}
 {% load staticfiles %}
 
 <script type="text/javascript">
 {% block JQuery %}
+$(document).ready(function(){
+  $("#JQuery-message").hide()});
 $("#submit-btn").click(function(event){
   event.preventDefault()
   var formData = $("#add-form").serialize()
@@ -28,45 +29,46 @@ $("#submit-btn").click(function(event){
 
 </script>
 
-  {% block content %}
-  <div class="product-background"></div>
-  <div class="container product-detail">
+{% block content %}
+  <div class="product-detail container col-xs-12 col-md-12 col-lg-12">
     <div class="row">
-      <div class="col-12">
+      <div class="col-xs-10 col-xs-offset-1">
         <h1>{{object.name}}</h1>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-xs-10 col-xs-offset-1">
       {% if object.productimage_set.count > 0 %}
-
         <div>
         {% for img in object.productimage_set.all %}
-
-
-        <img class='img-responsive' src='{{ img.image.url }}' />
-
+          <img class='img-responsive' src='{{ img.image.url }}' />
         {% endfor %}
-
         </div>
-
-        {% endif %}
+      {% endif %}
+      </div>
     </div>
-    <div class="col-md-4">
-      <p class="product-description">{{object.description}}</p>
-      <p id="JQuery-message" class="alert alert-success"></p>
-      <p>{{object.price}}</p>
 
-      <form id = "add-form" method = "GET" action = "{% url 'cart' %}">
-        <select class="" name="item">
-          {% for vari_choice in object.variation_set.all %}
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <p class="product-description">{{object.description}}</p>
+        <p id="JQuery-message" class="alert alert-success"></p>
+        <p>Individual price: ${{object.price}}</p>
+        <form id = "add-form" method = "GET" action = "{% url 'cart' %}">
+          <div class="form-group">
+            <label for="variation">Package</label>
+            <select class="form-control" name="item">
+              {% for vari_choice in object.variation_set.all %}
               <option value="{{vari_choice.id}}">{{ vari_choice }}</option>
-            {% endfor %}
-        </select>
-        <input id="submit-btn" type="submit" name="" class="btn btn-success" value="Add to Cart"/>
-    </form>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" class="form-control" min="1" id="" placeholder="">
+          </div>
+          <input id="submit-btn" type="submit" name="" class="btn btn-success" value="Add to Cart"/>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-
 {% endblock %}
